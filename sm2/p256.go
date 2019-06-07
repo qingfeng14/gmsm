@@ -475,7 +475,7 @@ func sm2P256PointToAffine(xOut, yOut, x, y, z *sm2P256FieldElement) {
 	sm2P256Mul(yOut, y, &zInv)
 }
 
-func sm2P256ToAffine(x, y, z *sm2P256FieldElement) (xOut, yOut *big.Int) {
+func sm2P256ToAffine(x, y, z *sm2P256FieldElement) (xOut *big.Int, yOut *big.Int) {
 	var xx, yy sm2P256FieldElement
 
 	sm2P256PointToAffine(&xx, &yy, x, y, z)

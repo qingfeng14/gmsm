@@ -30,3 +30,12 @@ unit:
 
 bench:
 	@$(GOTEST)  -bench=. -benchmem -cpu=1,2,4 gmsm/tests
+
+cpu:
+	@go test -benchmem -run=^$ gmsm/tests -bench ^BenchmarkTJVerify$ -memprofile=mem.out -cpuprofile=cpu.out
+
+cpuprof:
+	@go tool pprof tests.test cpu.out
+
+memprof:
+	@go tool pprof -alloc_space tests.test mem.out

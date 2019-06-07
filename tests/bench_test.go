@@ -1,11 +1,12 @@
 package test
 
 import (
+	"crypto/rand"
 	tjsm2 "gmsm/sm2"
 	"gmsm/sm3"
-	opensm2 "transaction_service/openssl/sm2"
-
+	crsm2 "sm_crypto_golang/sm2"
 	"testing"
+	opensm2 "transaction_service/openssl/sm2"
 )
 
 func BenchmarkOpenSSLVerify(b *testing.B) {
@@ -134,6 +135,27 @@ func BenchmarkTJVerifyParallel(b *testing.B) {
 			}
 		}
 	})
+}
+
+func BenchmarkGoSm2Verify(b *testing.B) {
+	priv, err := crsm2.GenerateKey(crsm2.P256_sm2(), rand.Reader)
+	if err != nil {
+		b.Error(err)
+	}
+
+	hash := sm3.Sm3Sum([]byte("Hello"))
+	r, s, err := crsm2.Sign(rand.Reader, priv, hash)
+	if err != nil {
+		b.Error(err)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		passed := crsm2.Verify(&priv.PublicKey, hash, r, s)
+		if !passed {
+			b.Error("Verify Failed")
+		}
+	}
 }
 
 func BenchmarkOpenSSLSign(b *testing.B) {
