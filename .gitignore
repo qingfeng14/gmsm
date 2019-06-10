@@ -33,3 +33,5 @@ packages/
 *.pem
 *.out
 *.test
+*.o
+*.S

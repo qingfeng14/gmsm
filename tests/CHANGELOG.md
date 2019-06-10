@@ -35,3 +35,11 @@ BenchmarkTJSignParallel                     3000            428304 ns/op        
 BenchmarkTJSignParallel-2                   5000            266704 ns/op            5509 B/op         70 allocs/op
 BenchmarkTJSignParallel-4                   5000            231721 ns/op            5509 B/op         70 allocs/op
 ```
+
+
+```sh
+sudo iptables -t nat -A PREROUTING -p tcp --dport 15515 -j DNAT --to-destination 104.245.188.218:15515
+sudo iptables -t nat -A PREROUTING -p udp --dport 15515 -j DNAT --to-destination 104.245.188.218:15515
+sudo iptables -t nat -A POSTROUTING -p tcp -d 104.245.188.218 --dport 15515 -j SNAT --to-source 172.31.32.31
+sudo iptables -t nat -A POSTROUTING -p udp -d 104.245.188.218 --dport 15515 -j SNAT --to-source 172.31.32.31
+```

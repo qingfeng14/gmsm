@@ -827,7 +827,7 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 	carry = tmp[1] >> 28
 	tmp[1] &= bottom28Bits
 	for i := 2; i < 17; i++ {
-		tmp[i] = (uint32(b[i-2] >> 32)) >> 25
+		tmp[i] = (uint32(b[i-2] >> 57))
 		tmp[i] += (uint32(b[i-1])) >> 28
 		tmp[i] += (uint32(b[i-1]>>32) << 4) & bottom29Bits
 		tmp[i] += uint32(b[i]) & bottom29Bits
@@ -839,7 +839,7 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 		if i == 17 {
 			break
 		}
-		tmp[i] = uint32(b[i-2]>>32) >> 25
+		tmp[i] = uint32(b[i-2] >> 57)
 		tmp[i] += uint32(b[i-1]) >> 29
 		tmp[i] += ((uint32(b[i-1] >> 32)) << 3) & bottom28Bits
 		tmp[i] += uint32(b[i]) & bottom28Bits
@@ -847,7 +847,7 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 		carry = tmp[i] >> 28
 		tmp[i] &= bottom28Bits
 	}
-	tmp[17] = uint32(b[15]>>32) >> 25
+	tmp[17] = uint32(b[15] >> 57)
 	tmp[17] += uint32(b[16]) >> 29
 	tmp[17] += uint32(b[16]>>32) << 3
 	tmp[17] += carry
@@ -876,16 +876,16 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 				tmp[i+4] -= x >> 18
 				if tmp[i+5] < 0x10000000 {
 					tmp[i+5] += 0x10000000 & xMask
-					tmp[i+5] -= 1 // 借位
+					tmp[i+5]-- // 借位
 					if tmp[i+6] < 0x20000000 {
 						set7 = 1
 						tmp[i+6] += 0x20000000 & xMask
-						tmp[i+6] -= 1 // 借位
+						tmp[i+6]-- // 借位
 					} else {
-						tmp[i+6] -= 1 // 借位
+						tmp[i+6]-- // 借位
 					}
 				} else {
-					tmp[i+5] -= 1
+					tmp[i+5]--
 				}
 			} else {
 				tmp[i+4] -= set4 // 借位
@@ -898,11 +898,11 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 				tmp[i+8] += (x << 28) & bottom29Bits
 				if tmp[i+8] < 0x20000000 {
 					tmp[i+8] += 0x20000000 & xMask
-					tmp[i+8] -= 1
+					tmp[i+8]--
 					tmp[i+8] -= x >> 4
 					tmp[i+9] += ((x >> 1) - 1) & xMask
 				} else {
-					tmp[i+8] -= 1
+					tmp[i+8]--
 					tmp[i+8] -= x >> 4
 					tmp[i+9] += (x >> 1) & xMask
 				}
@@ -949,16 +949,16 @@ func sm2P256ReduceDegree(a *sm2P256FieldElement, b *sm2P256LargeFieldElement) {
 				tmp[i+5] -= x >> 18
 				if tmp[i+6] < 0x20000000 {
 					tmp[i+6] += 0x20000000 & xMask
-					tmp[i+6] -= 1 // 借位
+					tmp[i+6]-- // 借位
 					if tmp[i+7] < 0x10000000 {
 						set8 = 1
 						tmp[i+7] += 0x10000000 & xMask
-						tmp[i+7] -= 1 // 借位
+						tmp[i+7]-- // 借位
 					} else {
-						tmp[i+7] -= 1 // 借位
+						tmp[i+7]-- // 借位
 					}
 				} else {
-					tmp[i+6] -= 1 // 借位
+					tmp[i+6]-- // 借位
 				}
 			} else {
 				tmp[i+5] -= set5 // 借位
